@@ -1,2 +1,27 @@
 from pathlib import Path
+from enum import Enum
+
+class ClipType(Enum):
+    RECENT = 1
+    SAVED = 2
+    SENTRY = 3
+
+class Clip:
+    def __init__(self, path, type):
+        self.__path = path
+        self.__type = type
+
+    @property
+    def path(self) -> str:
+        """
+        Path to the clip file on the file system.
+        """
+        return self.__path
+
+    @property
+    def type(self) -> ClipType:
+        """
+        Type of the clip.
+        """
+        return self.__type
 
