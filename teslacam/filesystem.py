@@ -1,25 +1,19 @@
-from pathlib import Path
 from typing import List
+from pathlib import Path
+from os import path
+
 from .enums import ClipType
+from .models import Clip
+from .config import Configuration
+from .consts import (TESLACAM_DIR)
 
-class Clip:
-    def __init__(self, path, type):
-        self.__path = path
-        self.__type = type
+class Filesystem:
+    def __init__(self, config: Configuration):
+        self.__config = config
 
-    @property
-    def path(self) -> str:
-        """
-        Path to the clip file on the file system.
-        """
-        return self.__path
+    def read_clips(self, type: ClipType) -> List[Clip]:
+        clip_dir = path.join(self.__config.tesla_cam_directory,
+            TESLACAM_DIR)
 
-    @property
-    def type(self) -> ClipType:
-        """
-        Type of the clip.
-        """
-        return self.__type
-
-def read_clips(type: ClipType) -> List[Clip]:
-    return []
+        path = Path(clip_dir)
+        return []
