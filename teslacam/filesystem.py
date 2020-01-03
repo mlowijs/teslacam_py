@@ -1,10 +1,6 @@
 from pathlib import Path
-from enum import Enum
-
-class ClipType(Enum):
-    RECENT = 1
-    SAVED = 2
-    SENTRY = 3
+from typing import List
+from .enums import ClipType
 
 class Clip:
     def __init__(self, path, type):
@@ -25,3 +21,5 @@ class Clip:
         """
         return self.__type
 
+def read_clips(type: ClipType) -> List[Clip]:
+    return []

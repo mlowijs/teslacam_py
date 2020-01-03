@@ -6,6 +6,7 @@
 # run upload jobs in background
 # notification
 
-import config
+from teslacam import ( config, filesystem )
 
 config = config.load()
+filesystem.read_clips(filesystem.ClipType.SAVED)
