@@ -6,7 +6,11 @@
 # run upload jobs in background
 # notification
 
-from teslacam import ( config, filesystem )
+from teslacam import ( config )
+from teslacam.enums import ClipType
+from teslacam.filesystem import Filesystem
 
 config = config.load()
-filesystem.read_clips(filesystem.ClipType.SAVED)
+fs = Filesystem(config)
+
+clips = fs.read_clips(ClipType.RECENT)
