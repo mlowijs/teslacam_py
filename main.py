@@ -13,4 +13,6 @@ from teslacam.filesystem import Filesystem
 config = config.load()
 fs = Filesystem(config)
 
-clips = fs.read_clips(ClipType.RECENT)
+for type in [ClipType.SAVED, ClipType.SENTRY]:
+    clips = fs.read_clips(type)
+    print(clips)

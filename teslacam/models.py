@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
 from datetime import datetime
+from typing import Optional
 
 from .enums import (ClipType, Camera)
 
@@ -15,9 +16,11 @@ CAMERA_DICT = {
 }
 
 class Clip:
-    def __init__(self, path: Path, type: ClipType):
+    def __init__(self, path: Path, type: ClipType, event: str=None):
         self.__path = str(path)
         self.__type = type
+        self.__event = event
+        self.__size = path.stat().st_size
 
         date = DATE_REGEX.findall(path.name)[0]
         self.__date = datetime.strptime(date, r"%Y-%m-%d_%H-%M-%S")
@@ -52,3 +55,17 @@ class Clip:
         Camera the clip was recorded with.
         """
         return self.__camera
+
+    @property
+    def event(self) -> Optional[str]:
+        """
+        Event (save/sentry) this clip is a part of.
+        """
+        return self.__event
+
+    @property
+    def size(self) -> int:
+        """
+        Size of the clip in bytes.
+        """
+        return self.__size

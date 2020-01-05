@@ -13,19 +13,30 @@ class Filesystem:
 
     def read_clips(self, type: ClipType) -> List[Clip]:
         clips_dir = path.join(self.__config.tesla_cam_directory,
-            TESLACAM_DIR, Filesystem.get_clip_dir(type))
+            TESLACAM_DIR, Filesystem.__get_clip_dir(type))
 
         clips_path = Path(clips_dir)
-        items = []
-        
+
+        if not clips_path.exists():
+            return []
+
+        return Filesystem.__get_items(clips_path, type)
+
+    @staticmethod
+    def __get_items(clips_path: Path, type: ClipType, items: List[Clip]=None, event: str=None) -> List[Clip]:
+        items = [] if items == None else items
+
         for item in clips_path.iterdir():
-            if item.is_file():
-                items.append(Clip(item, type))
+            if item.is_file() and path.splitext(item.name)[1] == ".mp4":
+                items.append(Clip(item, type, event))
+            
+            if item.is_dir():
+                Filesystem.__get_items(item, type, items, item.name)
 
         return items
 
     @staticmethod
-    def get_clip_dir(type: ClipType):
+    def __get_clip_dir(type: ClipType):
         if type == ClipType.RECENT:
             return RECENT_DIR
         elif type == ClipType.SAVED:
