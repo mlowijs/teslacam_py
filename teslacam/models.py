@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Optional
 
-from .enums import (ClipType, Camera)
+from teslacam.enums import (ClipType, Camera)
 
 DATE_REGEX = re.compile(r"^(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})-")
 CAMERA_REGEX = re.compile(r"-(\w+)\.mp4")
@@ -18,14 +18,15 @@ CAMERA_DICT = {
 class Clip:
     def __init__(self, path: Path, type: ClipType, event: str=None):
         self.__path = str(path)
+        self.__name = path.name
         self.__type = type
         self.__event = event
         self.__size = path.stat().st_size
 
-        date = DATE_REGEX.findall(path.name)[0]
+        date = DATE_REGEX.findall(self.name)[0]
         self.__date = datetime.strptime(date, r"%Y-%m-%d_%H-%M-%S")
 
-        camera = CAMERA_REGEX.findall(path.name)[0]
+        camera = CAMERA_REGEX.findall(self.name)[0]
         self.__camera = CAMERA_DICT[camera]
 
     @property
@@ -34,6 +35,13 @@ class Clip:
         Path to the clip file on the file system.
         """
         return self.__path
+
+    @property
+    def name(self) -> str:
+        """
+        Name of the clip.
+        """
+        return self.__name
 
     @property
     def type(self) -> ClipType:
