@@ -18,13 +18,10 @@ UPLOADERS: Mapping[str, Type[Uploader]] = {
     "filesystem": FilesystemUploader
 }
 
-def get_uploader(config: Configuration) -> Uploader:
-    return UPLOADERS[config.uploader](config)
-
 config = load_config()
 
 fs = Filesystem(config)
-uploader = get_uploader(config)
+uploader = UPLOADERS[config.uploader](config)
 
 for type in [ClipType.SAVED, ClipType.SENTRY]:
     clips = fs.read_clips(type)
