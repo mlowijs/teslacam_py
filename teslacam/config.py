@@ -1,10 +1,13 @@
-from typing import Any
+from typing import Any, List
 import yaml
+
+from teslacam.enums import ClipType
 
 class Configuration:
     def __init__(self, config: dict):
         self.__tesla_cam_directory = config["teslaCamDirectory"]
         self.__mount_directory = config["mountDirectory"]
+        self.__clip_types = [ClipType[type] for type in config["clipTypes"]]
         self.__last_event_clips_count = config["lastEventClipsCount"]
         self.__uploader = config["uploader"]
 
@@ -15,19 +18,38 @@ class Configuration:
 
     @property
     def tesla_cam_directory(self) -> str:
+        """
+        Directory containing the TeslaCam directory.
+        """
         return self.__tesla_cam_directory
 
     @property
     def mount_directory(self) -> bool:
+        """
+        Indicates whether the tesla_cam_directory should be mounted.
+        """
         return self.__mount_directory
 
     @property
     def last_event_clips_count(self) -> int:
+        """
+        The amount of latest clips that should be uploaded for every event.
+        """
         return self.__last_event_clips_count
 
     @property
     def uploader(self) -> str:
+        """
+        The uploader to use.
+        """
         return self.__uploader
+
+    @property
+    def clip_types(self) -> List[ClipType]:
+        """
+        Which clip types to upload.
+        """
+        return self.__clip_types
 
 def load_config() -> Configuration:
     """

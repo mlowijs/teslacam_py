@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Optional
 
-from teslacam.enums import (ClipType, Camera)
+from teslacam.enums import ClipType, Camera
 
 DATE_REGEX = re.compile(r"^(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})-")
 CAMERA_REGEX = re.compile(r"-(\w+)\.mp4")

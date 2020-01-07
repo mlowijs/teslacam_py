@@ -5,7 +5,7 @@ from os import path
 from teslacam.enums import ClipType
 from teslacam.models import Clip
 from teslacam.config import Configuration
-from teslacam.consts import (TESLACAM_DIR, RECENT_DIR, SAVED_DIR, SENTRY_DIR)
+from teslacam.consts import TESLACAM_DIR, RECENT_DIR, SAVED_DIR, SENTRY_DIR
 
 class Filesystem:
     def __init__(self, config: Configuration):

@@ -1,4 +1,4 @@
-from abc import (ABC, abstractmethod)
+from abc import ABC, abstractmethod
 from teslacam.config import Configuration
 
 from teslacam.models import Clip
