@@ -1,6 +1,7 @@
 from typing import List
 from pathlib import Path
 from os import path
+from sh import mount, umount
 
 from teslacam.enums import ClipType
 from teslacam.models import Clip
@@ -12,6 +13,9 @@ class Filesystem:
         self.__config = config
 
     def read_clips(self, type: ClipType) -> List[Clip]:
+        if (self.__config.mount_directory):
+            self.mount_directory()
+
         clips_dir = path.join(self.__config.tesla_cam_directory,
             TESLACAM_DIR, Filesystem.__get_clip_dir(type))
 
@@ -20,7 +24,18 @@ class Filesystem:
         if not clips_path.exists():
             return []
 
-        return Filesystem.__get_items(clips_path, type)
+        clips = Filesystem.__get_items(clips_path, type)
+
+        if (self.__config.mount_directory):
+            self.unmount_directory()
+
+        return clips
+
+    def mount_directory(self):
+        mount(self.__config.tesla_cam_directory)
+
+    def unmount_directory(self):
+        umount(self.__config.tesla_cam_directory)
 
     @staticmethod
     def __get_items(clips_path: Path, type: ClipType, items: List[Clip]=None, event: str=None) -> List[Clip]:

@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 pyyaml = "*"
 azure-storage-blob = "*"
+sh = "*"
 
 [requires]
 python_version = "3.8"
