@@ -41,11 +41,10 @@ def process_clips():
         clips = fs.read_clips(type)
 
         # business logic
-        date_grouped = group_by(clips, lambda c: c.event)
-        filtered_groups = sorted(date_grouped.keys())[-config.last_event_clips_count:]
 
-        for key in filtered_groups:
-            pass
+        for event_clips in group_by(clips, lambda c: c.event).values():
+            grouped_clips = group_by(event_clips, lambda c: c.date)
+            filtered_clip_groups = sorted(grouped_clips.keys())[-config.last_event_clips_count:]
 
         # end business logic
 
