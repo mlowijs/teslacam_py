@@ -1,7 +1,7 @@
 from typing import List
 from pathlib import Path
 from os import path
-from sh import mount, umount
+# from sh import mount, umount
 
 from teslacam.enums import ClipType
 from teslacam.models import Clip
@@ -32,10 +32,12 @@ class Filesystem:
         return clips
 
     def mount_directory(self):
-        mount(self.__config.tesla_cam_directory)
+        pass
+        # mount(self.__config.tesla_cam_directory)
 
     def unmount_directory(self):
-        umount(self.__config.tesla_cam_directory)
+        pass
+        # umount(self.__config.tesla_cam_directory)
 
     @staticmethod
     def __get_items(clips_path: Path, type: ClipType, items: List[Clip]=None, event: str=None) -> List[Clip]:

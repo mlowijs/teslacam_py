@@ -9,6 +9,7 @@ verify_ssl = true
 pyyaml = "*"
 azure-storage-blob = "*"
 sh = "*"
+flask = "*"
 
 [requires]
 python_version = "3.8"
