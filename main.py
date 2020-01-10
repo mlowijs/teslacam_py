@@ -1,21 +1,16 @@
-# TODO
-# mounting filesystem
-# notification
-
 from typing import List
 import threading
 
 from flask import Flask
 
 from teslacam import config
-from teslacam.consts import UPLOADERS
-from teslacam.filesystem import Filesystem
-from teslacam.models import Clip
+from teslacam.consts import MIN_FILE_SIZE_BYTES, UPLOADERS
+from teslacam.filesystem import FileSystem
 from teslacam.funcs import group_by
+from teslacam.models import Clip
 
 cfg = config.load_config()
-
-fs = Filesystem(cfg)
+fs = FileSystem(cfg)
 uploader = UPLOADERS[cfg.uploader](cfg)
 
 def get_clips_to_upload(clips: List[Clip]) -> List[Clip]:
@@ -23,9 +18,10 @@ def get_clips_to_upload(clips: List[Clip]) -> List[Clip]:
 
     for event_clips in group_by(clips, lambda c: c.event).values():
         clips_by_date = group_by(event_clips, lambda c: c.date)
-        keys = sorted(clips_by_date.keys())
+        dates = sorted(clips_by_date.keys())[-cfg.last_event_clips_count:]
 
-        to_upload.extend([clip for date in keys[-cfg.last_event_clips_count:] for clip in clips_by_date[date]])
+        clips_to_upload = [clip for date in dates for clip in clips_by_date[date]]
+        to_upload.extend([clip for clip in clips_to_upload if clip.size >= MIN_FILE_SIZE_BYTES])
 
     return to_upload
 

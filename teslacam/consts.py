@@ -10,7 +10,8 @@ UPLOADERS: Mapping[str, Type[Uploader]] = {
 }
 
 TESLACAM_DIR = "TeslaCam"
-
 RECENT_DIR = "RecentClips"
 SAVED_DIR = "SavedClips"
 SENTRY_DIR = "SentryClips"
+
+MIN_FILE_SIZE_BYTES = 1048576 # 1 MB

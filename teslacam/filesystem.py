@@ -1,14 +1,14 @@
-from typing import List
-from pathlib import Path
 from os import path
+from pathlib import Path
+from typing import List
 # from sh import mount, umount
 
-from teslacam.enums import ClipType
-from teslacam.models import Clip
 from teslacam.config import Configuration
 from teslacam.consts import TESLACAM_DIR, RECENT_DIR, SAVED_DIR, SENTRY_DIR
+from teslacam.enums import ClipType
+from teslacam.models import Clip
 
-class Filesystem:
+class FileSystem:
     def __init__(self, config: Configuration):
         self.__config = config
 
@@ -17,14 +17,14 @@ class Filesystem:
             self.mount_directory()
 
         clips_dir = path.join(self.__config.tesla_cam_directory,
-            TESLACAM_DIR, Filesystem.__get_clip_dir(type))
+            TESLACAM_DIR, FileSystem.__get_clip_dir(type))
 
         clips_path = Path(clips_dir)
 
         if not clips_path.exists():
             return []
 
-        clips = Filesystem.__get_items(clips_path, type)
+        clips = FileSystem.__get_items(clips_path, type)
 
         if (self.__config.mount_directory):
             self.unmount_directory()
@@ -48,7 +48,7 @@ class Filesystem:
                 items.append(Clip(item, type, event))
             
             if item.is_dir():
-                Filesystem.__get_items(item, type, items, item.name)
+                FileSystem.__get_items(item, type, items, item.name)
 
         return items
 
