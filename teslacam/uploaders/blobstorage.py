@@ -26,7 +26,8 @@ class BlobStorageUploader(Uploader):
             return False
 
     def upload(self, clip: Clip):
-        dir = clip.event if clip.event != None else "recent"
+        clip.date.strftime("")
+        dir = f"{clip.date.year}/{clip.date.month}/{clip.date.day}" if clip.event != None else "recent"
         blob_name = f"{dir}/{clip.name}"
 
         blob_client = self.__container_client.get_blob_client(blob_name)
