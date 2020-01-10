@@ -53,7 +53,7 @@ class FileSystem:
         return items
 
     @staticmethod
-    def __get_clip_dir(type: ClipType):
+    def __get_clip_dir(type: ClipType) -> str:
         if type == ClipType.RECENT:
             return RECENT_DIR
         elif type == ClipType.SAVED:

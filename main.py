@@ -1,5 +1,3 @@
-from flask import Flask
-
 from teslacam import config
 from teslacam.services import upload
 from teslacam.services.filesystem import FileSystem
@@ -10,9 +8,5 @@ fs = FileSystem(cfg)
 # Start upload job
 upload.start_job(cfg, fs)
 
-# Setup web server
-app = Flask(__name__)
+# Start web server
 
-@app.route("/")
-def hello():
-    return "Hello, World!"
