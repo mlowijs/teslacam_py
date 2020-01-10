@@ -34,6 +34,7 @@ def __process_clips(cfg: Configuration, fs: FileSystem):
     if (cfg.mount_directory):
         fs.unmount_directory()
     
+    print("Processing complete")
     start_job(cfg, fs)
 
 def __get_clips_to_upload(clips: List[Clip], cfg: Configuration) -> List[Clip]:
