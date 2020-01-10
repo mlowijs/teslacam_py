@@ -1,11 +1,9 @@
 # TODO
 # mounting filesystem
-# select and discard x amount of clips per event
 # notification
 
-from typing import Dict, Mapping, Type, List, TypeVar, Callable, Tuple
+from typing import Mapping, Type, List
 import threading
-from collections import defaultdict
 
 from flask import Flask
 
@@ -15,6 +13,7 @@ from teslacam.uploaders.blobstorage import BlobStorageUploader
 from teslacam.contracts import Uploader
 from teslacam.filesystem import Filesystem
 from teslacam.models import Clip
+from teslacam.funcs import group_by
 
 UPLOADERS: Mapping[str, Type[Uploader]] = {
     "blobStorage": BlobStorageUploader,
@@ -25,16 +24,6 @@ config = load_config()
 
 fs = Filesystem(config)
 uploader = UPLOADERS[config.uploader](config)
-
-TItem = TypeVar("TItem")
-TKey = TypeVar("TKey")
-def group_by(items: List[TItem], by: Callable[[TItem], TKey]) -> Dict[TKey, List[TItem]]:
-    result: Dict[TKey, List[TItem]] = defaultdict(list)
-
-    for item in items:
-        result[by(item)].append(item)
-
-    return result
 
 def get_clips_to_upload(clips: List[Clip]) -> List[Clip]:
     to_upload: List[Clip] = []
