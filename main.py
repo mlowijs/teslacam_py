@@ -10,3 +10,4 @@ upload.start_job(cfg, fs)
 
 # Start web server
 
+print("Started")
