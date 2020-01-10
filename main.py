@@ -20,8 +20,12 @@ def get_clips_to_upload(clips: List[Clip]) -> List[Clip]:
         clips_by_date = group_by(event_clips, lambda c: c.date)
         dates = sorted(clips_by_date.keys())[-cfg.last_event_clips_count:]
 
-        clips_to_upload = [clip for date in dates for clip in clips_by_date[date]]
-        to_upload.extend([clip for clip in clips_to_upload if clip.size >= MIN_FILE_SIZE_BYTES])
+        clips_to_upload = [clip
+            for date in dates
+            for clip in clips_by_date[date]
+            if clip.size >= MIN_FILE_SIZE_BYTES]
+
+        to_upload.extend(clips_to_upload)
 
     return to_upload
 
