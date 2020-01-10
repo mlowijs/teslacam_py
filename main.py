@@ -2,28 +2,21 @@
 # mounting filesystem
 # notification
 
-from typing import Mapping, Type, List
+from typing import List
 import threading
 
 from flask import Flask
 
-from teslacam.uploaders.filesystem import FilesystemUploader
-from teslacam.config import load_config
-from teslacam.uploaders.blobstorage import BlobStorageUploader
-from teslacam.contracts import Uploader
+from teslacam import config
+from teslacam.consts import UPLOADERS
 from teslacam.filesystem import Filesystem
 from teslacam.models import Clip
 from teslacam.funcs import group_by
 
-UPLOADERS: Mapping[str, Type[Uploader]] = {
-    "blobStorage": BlobStorageUploader,
-    "filesystem": FilesystemUploader
-}
+cfg = config.load_config()
 
-config = load_config()
-
-fs = Filesystem(config)
-uploader = UPLOADERS[config.uploader](config)
+fs = Filesystem(cfg)
+uploader = UPLOADERS[cfg.uploader](cfg)
 
 def get_clips_to_upload(clips: List[Clip]) -> List[Clip]:
     to_upload: List[Clip] = []
@@ -32,12 +25,12 @@ def get_clips_to_upload(clips: List[Clip]) -> List[Clip]:
         clips_by_date = group_by(event_clips, lambda c: c.date)
         keys = sorted(clips_by_date.keys())
 
-        to_upload.extend([clip for date in keys[-config.last_event_clips_count:] for clip in clips_by_date[date]])
+        to_upload.extend([clip for date in keys[-cfg.last_event_clips_count:] for clip in clips_by_date[date]])
 
     return to_upload
 
 def process_clips():
-    for type in config.clip_types:
+    for type in cfg.clip_types:
         print(f'Process clips of type {str(type)}')
         clips = fs.read_clips(type)
 
