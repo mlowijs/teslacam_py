@@ -7,6 +7,7 @@ from teslacam.services.filesystem import FileSystem
 cfg = config.load_config()
 fs = FileSystem(cfg)
 
+# Start upload job
 upload.start_job(cfg, fs)
 
 # Setup web server

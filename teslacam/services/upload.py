@@ -10,7 +10,7 @@ from teslacam.services.filesystem import FileSystem
 UPLOAD_INTERVAL = 10
 
 def start_job(cfg: Configuration, fs: FileSystem):
-    Timer(UPLOAD_INTERVAL, __process_clips).start()    
+    Timer(UPLOAD_INTERVAL, __process_clips, [cfg, fs]).start()    
 
 def __process_clips(cfg: Configuration, fs: FileSystem):
     uploader = UPLOADERS[cfg.uploader](cfg)
