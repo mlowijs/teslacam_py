@@ -1,3 +1,4 @@
+
 import re
 from pathlib import Path
 from datetime import datetime
@@ -81,4 +82,7 @@ class Clip:
         return self.__size
 
     def delete(self):
+        """
+        Deletes a clip from disk.
+        """
         self.__pathObject.unlink()
