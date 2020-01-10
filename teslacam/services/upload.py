@@ -20,10 +20,12 @@ def __process_clips(cfg: Configuration, fs: FileSystem):
         clips = fs.read_clips(type)
 
         for clip in __get_clips_to_upload(clips, cfg):
+            print(f"Uploading clip '{clip.name}'")
             if uploader.can_upload():
                 uploader.upload(clip)
 
         for clip in clips:
+            print(f"Deleting clip '{clip.name}'")
             clip.delete()
     
     start_job(cfg, fs)

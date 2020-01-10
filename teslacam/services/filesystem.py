@@ -1,7 +1,7 @@
 from os import path
 from pathlib import Path
 from typing import List
-# from sh import mount, umount
+from sh import mount, umount
 
 from teslacam.config import Configuration
 from teslacam.consts import TESLACAM_DIR, RECENT_DIR, SAVED_DIR, SENTRY_DIR
@@ -32,12 +32,10 @@ class FileSystem:
         return clips
 
     def mount_directory(self):
-        pass
-        # mount(self.__config.tesla_cam_directory)
+        mount(self.__config.tesla_cam_directory)
 
     def unmount_directory(self):
-        pass
-        # umount(self.__config.tesla_cam_directory)
+        umount(self.__config.tesla_cam_directory)
 
     @staticmethod
     def __get_items(clips_path: Path, type: ClipType, items: List[Clip]=None, event: str=None) -> List[Clip]:
