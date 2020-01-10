@@ -17,6 +17,8 @@ CAMERA_DICT = {
 
 class Clip:
     def __init__(self, path: Path, type: ClipType, event: str=None):
+        self.__pathObject = path
+
         self.__path = str(path)
         self.__name = path.name
         self.__type = type
@@ -77,3 +79,6 @@ class Clip:
         Size of the clip in bytes.
         """
         return self.__size
+
+    def delete(self):
+        self.__pathObject.unlink()
