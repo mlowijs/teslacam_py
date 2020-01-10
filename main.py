@@ -27,7 +27,7 @@ def get_clips_to_upload(clips: List[Clip]) -> List[Clip]:
 
 def process_clips():
     for type in cfg.clip_types:
-        print(f'Process clips of type {str(type)}')
+        print(f"Process clips of type {str(type)}")
         clips = fs.read_clips(type)
 
         for clip in get_clips_to_upload(clips):
