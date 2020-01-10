@@ -1,7 +1,6 @@
-
-import re
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+import re
 from typing import Optional
 
 from teslacam.enums import ClipType, Camera
