@@ -13,9 +13,6 @@ class FileSystem:
         self.__config = config
 
     def read_clips(self, type: ClipType) -> List[Clip]:
-        if (self.__config.mount_directory):
-            self.mount_directory()
-
         clips_dir = path.join(self.__config.tesla_cam_directory,
             TESLACAM_DIR, FileSystem.__get_clip_dir(type))
 
@@ -25,9 +22,6 @@ class FileSystem:
             return []
 
         clips = FileSystem.__get_items(clips_path, type)
-
-        if (self.__config.mount_directory):
-            self.unmount_directory()
 
         return clips
 

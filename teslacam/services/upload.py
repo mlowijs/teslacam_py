@@ -15,6 +15,9 @@ def start_job(cfg: Configuration, fs: FileSystem):
 def __process_clips(cfg: Configuration, fs: FileSystem):
     uploader = UPLOADERS[cfg.uploader](cfg)
 
+    if (cfg.mount_directory):
+        fs.mount_directory()
+
     for type in cfg.clip_types:
         print(f"Process clips of type {str(type)}")
         clips = fs.read_clips(type)
@@ -27,6 +30,9 @@ def __process_clips(cfg: Configuration, fs: FileSystem):
         for clip in clips:
             print(f"Deleting clip '{clip.name}'")
             clip.delete()
+
+    if (cfg.mount_directory):
+        fs.unmount_directory()
     
     start_job(cfg, fs)
 
