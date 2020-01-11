@@ -21,5 +21,5 @@ setup(
         "sh>=1.12.14",
         "flask>=1.1.1"
     ],
-    scripts=['src/main.py']
+    scripts=['src/teslacam.py']
 )
