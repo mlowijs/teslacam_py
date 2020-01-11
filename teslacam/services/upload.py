@@ -4,6 +4,7 @@ from typing import List
 from teslacam.config import Configuration
 from teslacam.consts import MIN_FILE_SIZE_BYTES, UPLOADERS
 from teslacam.funcs import group_by
+from teslacam.log import log
 from teslacam.models import Clip
 from teslacam.services.filesystem import FileSystem
 
@@ -19,22 +20,22 @@ def __process_clips(cfg: Configuration, fs: FileSystem):
         fs.mount_directory()
 
     for type in cfg.clip_types:
-        print(f"Process clips of type {str(type)}")
+        log(f"Process clips of type {str(type)}")
         clips = fs.read_clips(type)
 
         for clip in __get_clips_to_upload(clips, cfg):
-            print(f"Uploading clip '{clip.name}'")
+            log(f"Uploading clip '{clip.name}'")
             if uploader.can_upload():
                 uploader.upload(clip)
 
         for clip in clips:
-            print(f"Deleting clip '{clip.name}'")
+            log(f"Deleting clip '{clip.name}'")
             clip.delete()
 
     if (cfg.mount_directory):
         fs.unmount_directory()
     
-    print("Processing complete")
+    log("Processing complete")
     start_job(cfg, fs)
 
 def __get_clips_to_upload(clips: List[Clip], cfg: Configuration) -> List[Clip]:

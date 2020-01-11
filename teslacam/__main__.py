@@ -1,3 +1,4 @@
+from teslacam.log import log
 from teslacam import config
 from teslacam.services import upload
 from teslacam.services.filesystem import FileSystem
@@ -11,7 +12,7 @@ def main():
 
     # Start web server
 
-    print("Started")
+    log("Started")
 
 if __name__ == "__main__":
     main()
