@@ -1,6 +1,6 @@
 from os import path
 from pathlib import Path
-from typing import List
+from typing import List, Mapping
 from sh import mount, umount
 
 from teslacam.config import Configuration
@@ -8,13 +8,19 @@ from teslacam.consts import TESLACAM_DIR, RECENT_DIR, SAVED_DIR, SENTRY_DIR
 from teslacam.enums import ClipType
 from teslacam.models import Clip
 
+CLIP_TYPE_DIR_MAPPING: Mapping[ClipType, str] = {
+    ClipType.RECENT: RECENT_DIR,
+    ClipType.SAVED: SAVED_DIR,
+    ClipType.SENTRY: SENTRY_DIR
+}
+
 class FileSystem:
     def __init__(self, config: Configuration):
         self.__config = config
 
     def read_clips(self, type: ClipType) -> List[Clip]:
         clips_dir = path.join(self.__config.tesla_cam_directory,
-            TESLACAM_DIR, FileSystem.__get_clip_dir(type))
+            TESLACAM_DIR, CLIP_TYPE_DIR_MAPPING[type])
 
         clips_path = Path(clips_dir)
 
@@ -43,12 +49,3 @@ class FileSystem:
                 FileSystem.__get_items(item, type, items, item.name)
 
         return items
-
-    @staticmethod
-    def __get_clip_dir(type: ClipType) -> str:
-        if type == ClipType.RECENT:
-            return RECENT_DIR
-        elif type == ClipType.SAVED:
-            return SAVED_DIR
-        
-        return SENTRY_DIR

@@ -72,5 +72,4 @@ def load_config() -> Configuration:
 
     with open(cfg_path) as file:
         cfg = yaml.load(file, Loader=yaml.FullLoader)
-        print(cfg)
         return Configuration(cfg)
