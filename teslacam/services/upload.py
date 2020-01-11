@@ -3,6 +3,7 @@ from typing import List
 
 from teslacam.config import Configuration
 from teslacam.consts import MIN_FILE_SIZE_BYTES, UPLOADERS
+from teslacam.enums import ClipType
 from teslacam.funcs import group_by
 from teslacam.log import log
 from teslacam.models import Clip
@@ -11,32 +12,38 @@ from teslacam.services.filesystem import FileSystem
 UPLOAD_INTERVAL = 30
 
 def start_job(cfg: Configuration, fs: FileSystem):
-    Timer(UPLOAD_INTERVAL, __process_clips, [cfg, fs]).start()    
+    Timer(UPLOAD_INTERVAL, __process_clips, [cfg, fs]).start()
 
 def __process_clips(cfg: Configuration, fs: FileSystem):
-    uploader = UPLOADERS[cfg.uploader](cfg)
-
     if (cfg.mount_directory):
         fs.mount_directory()
 
     for type in cfg.clip_types:
-        log(f"Process clips of type {str(type)}")
-        clips = fs.read_clips(type)
-
-        for clip in __get_clips_to_upload(clips, cfg):
-            log(f"Uploading clip '{clip.name}'")
-            if uploader.can_upload():
-                uploader.upload(clip)
-
-        for clip in clips:
-            log(f"Deleting clip '{clip.name}'")
-            clip.delete()
+        __process_of_type(cfg, fs, type)
 
     if (cfg.mount_directory):
         fs.unmount_directory()
     
     log("Processing complete")
     start_job(cfg, fs)
+
+def __process_of_type(cfg: Configuration, fs: FileSystem, type: ClipType):
+    uploader = UPLOADERS[cfg.uploader](cfg)
+
+    log(f"Processing {str(type)} clips...")
+    clips = fs.read_clips(type)
+
+    log(f"Found {len(clips)} clips")
+
+    for clip in __get_clips_to_upload(clips, cfg):
+        log(f"Uploading clip '{clip.name}'")
+
+        if uploader.can_upload():
+            uploader.upload(clip)
+
+    for clip in clips:
+        log(f"Deleting clip '{clip.name}'")
+        clip.delete()
 
 def __get_clips_to_upload(clips: List[Clip], cfg: Configuration) -> List[Clip]:
     to_upload: List[Clip] = []
