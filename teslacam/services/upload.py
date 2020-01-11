@@ -31,15 +31,16 @@ def __process_of_type(cfg: Configuration, fs: FileSystem, type: ClipType):
     uploader = UPLOADERS[cfg.uploader](cfg)
 
     log(f"Processing {str(type)} clips...")
-    clips = fs.read_clips(type)
 
+    clips = fs.read_clips(type)
     log(f"Found {len(clips)} clips")
 
     for clip in __get_clips_to_upload(clips, cfg):
-        log(f"Uploading clip '{clip.name}'")
-
         if uploader.can_upload():
+            log(f"Uploading clip '{clip.name}'")
             uploader.upload(clip)
+        else:
+            clips.remove(clip) # Don't delete it
 
     for clip in clips:
         log(f"Deleting clip '{clip.name}'")
