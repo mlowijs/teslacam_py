@@ -10,7 +10,8 @@ setup(
         "pyyaml>=5.3",
         "azure-storage-blob>=12.1.0",
         "sh>=1.12.14",
-        "flask>=1.1.1"
+        "flask>=1.1.1",
+        "chump>=1.6.0"
     ],
     entry_points={"console_scripts": ["teslacam = teslacam.__main__:main"]}
 )

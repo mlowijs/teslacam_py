@@ -1,19 +1,20 @@
-from teslacam.config import Configuration
 from azure.storage.blob import ContainerClient
 from azure.core.exceptions import ServiceRequestError
-from time import time
 
+from teslacam.config import Configuration
 from teslacam.contracts import Uploader
 from teslacam.models import Clip
 
-class BlobStorageUploader(Uploader):
-    def __init__(self, config: Configuration):
-        super().__init__(config)
+BLOB_STORAGE_CONFIG_KEY = "blobStorageUploader"
 
-        blob_config = config["blobStorageUploader"]
-        account_name = blob_config["accountName"]
-        account_key = blob_config["accountKey"]
-        container_name = blob_config["containerName"]
+class BlobStorageUploader(Uploader):
+    def __init__(self, cfg: Configuration):
+        super().__init__(cfg)
+
+        blob_cfg = cfg[BLOB_STORAGE_CONFIG_KEY]
+        account_name = blob_cfg["accountName"]
+        account_key = blob_cfg["accountKey"]
+        container_name = blob_cfg["containerName"]
 
         self.__container_client = ContainerClient(f"https://{account_name}.blob.core.windows.net/",
             container_name, account_key, retry_total=1, connection_timeout=5)

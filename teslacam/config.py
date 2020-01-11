@@ -1,5 +1,5 @@
 from os import path
-from typing import Any, List
+from typing import Any, List, Optional
 
 import yaml
 
@@ -14,6 +14,8 @@ class Configuration:
         self.__clip_types = [ClipType[type] for type in config["clipTypes"]]
         self.__last_event_clips_count = config["lastEventClipsCount"]
         self.__uploader = config["uploader"]
+        
+        self.__notifier = config.get("notifier")
 
         self.__dict = config
 
@@ -55,6 +57,13 @@ class Configuration:
         """
         return self.__clip_types
 
+    @property
+    def notifier(self) -> Optional[str]:
+        """
+        The notifier to use.
+        """
+        return self.__notifier
+
 def load_config() -> Configuration:
     """
     Loads the application configuration from config.yml.
@@ -63,4 +72,5 @@ def load_config() -> Configuration:
 
     with open(cfg_path) as file:
         cfg = yaml.load(file, Loader=yaml.FullLoader)
+        print(cfg)
         return Configuration(cfg)

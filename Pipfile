@@ -10,6 +10,7 @@ pyyaml = "*"
 azure-storage-blob = "*"
 sh = "*"
 flask = "*"
+chump = "*"
 
 [requires]
 python_version = "3.8"
