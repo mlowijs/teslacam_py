@@ -1,7 +1,11 @@
+from os import path
 from typing import Any, List
+
 import yaml
 
 from teslacam.enums import ClipType
+
+CONFIG_PATH = "/etc/teslacam.yml"
 
 class Configuration:
     def __init__(self, config: dict):
@@ -55,6 +59,8 @@ def load_config() -> Configuration:
     """
     Loads the application configuration from config.yml.
     """
-    with open("config.yml") as file:
-        config = yaml.load(file, Loader=yaml.FullLoader)
-        return Configuration(config)
+    cfg_path = CONFIG_PATH if path.isfile(CONFIG_PATH) else "config.yml"
+
+    with open(cfg_path) as file:
+        cfg = yaml.load(file, Loader=yaml.FullLoader)
+        return Configuration(cfg)
