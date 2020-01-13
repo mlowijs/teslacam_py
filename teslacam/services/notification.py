@@ -4,9 +4,9 @@ from teslacam.config import Configuration
 from teslacam.consts import NOTIFIERS
 from teslacam.contracts import Notifier
 
-class Notification:
+class NotificationService:
     def __init__(self, cfg: Configuration):
-        self.__notifier = Notification.__get_notifier(cfg)
+        self.__notifier = NotificationService.__get_notifier(cfg)
 
     def notify(self, msg: str):
         if not self.__notifier:

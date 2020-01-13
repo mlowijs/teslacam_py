@@ -1,5 +1,6 @@
+from teslacam.services.notification import NotificationService
 from threading import Timer
-from typing import List
+from typing import List, Optional
 
 from teslacam.config import Configuration
 from teslacam.consts import MIN_FILE_SIZE_BYTES, UPLOADERS
@@ -11,53 +12,74 @@ from teslacam.services.filesystem import FileSystem
 
 UPLOAD_INTERVAL = 30
 
-def start_job(cfg: Configuration, fs: FileSystem):
-    Timer(UPLOAD_INTERVAL, __process_clips, [cfg, fs]).start()
+class UploadService:
+    def __init__(self, cfg: Configuration, fs: FileSystem, notification: NotificationService):
+        self.__cfg = cfg
+        self.__fs = fs
+        self.__notification = notification
 
-def __process_clips(cfg: Configuration, fs: FileSystem):
-    if (cfg.mount_directory):
-        fs.mount_directory()
+        self.__uploader = UPLOADERS[cfg.uploader](cfg)
+        self.__timer: Optional[Timer] = None
 
-    for type in cfg.clip_types:
-        __process_of_type(cfg, fs, type)
+    def start(self):
+        """
+        Starts a timer that will periodically upload TeslaCam clips.
+        """
+        if self.__timer is not None:
+            return
 
-    if (cfg.mount_directory):
-        fs.unmount_directory()
-    
-    log("Processing complete")
-    start_job(cfg, fs)
+        self.__timer = Timer(UPLOAD_INTERVAL, self.__process_clips)
+        self.__timer.start()
 
-def __process_of_type(cfg: Configuration, fs: FileSystem, type: ClipType):
-    uploader = UPLOADERS[cfg.uploader](cfg)
+    def __process_clips(self):
+        if (self.__cfg.mount_directory):
+            self.__fs.mount_directory()
 
-    log(f"Processing {str(type)} clips...")
+        for type in self.__cfg.clip_types:
+            self.__process_of_type(type)
 
-    clips = fs.read_clips(type)
-    log(f"Found {len(clips)} clips")
+        if (self.__cfg.mount_directory):
+            self.__fs.unmount_directory()
+        
+        log("Processing complete")
 
-    for clip in __get_clips_to_upload(clips, cfg):
-        if uploader.can_upload():
-            log(f"Uploading clip '{clip.name}'")
-            uploader.upload(clip)
-        else:
-            clips.remove(clip) # Don't delete it
+        self.__timer = None
+        self.start()
 
-    for clip in clips:
-        log(f"Deleting clip '{clip.name}'")
-        clip.delete()
+    def __process_of_type(self, type: ClipType):
+        log(f"Processing {str(type)} clips...")
 
-def __get_clips_to_upload(clips: List[Clip], cfg: Configuration) -> List[Clip]:
-    to_upload: List[Clip] = []
+        clips = self.__fs.read_clips(type)
+        log(f"Found {len(clips)} clips")
 
-    for event_clips in group_by(clips, lambda c: c.event).values():
-        clips_by_date = group_by(event_clips, lambda c: c.date)
-        dates = sorted(clips_by_date.keys())[-cfg.last_event_clips_count:]
+        uploaded = 0
 
-        clips_to_upload = [clip
-            for date in dates
-            for clip in clips_by_date[date]
-            if clip.size >= MIN_FILE_SIZE_BYTES]
+        for clip in self.__get_clips_to_upload(clips):
+            if self.__uploader.can_upload():
+                log(f"Uploading clip '{clip.name}'")
+                self.__uploader.upload(clip)
+                uploaded += 1
+            else:
+                clips.remove(clip) # Don't delete it
 
-        to_upload.extend(clips_to_upload)
+        for clip in clips:
+            log(f"Deleting clip '{clip.name}'")
+            clip.delete()
 
-    return to_upload
+        self.__notification.notify(f"Uploaded {uploaded} clips")
+
+    def __get_clips_to_upload(self, clips: List[Clip]) -> List[Clip]:
+        to_upload: List[Clip] = []
+
+        for event_clips in group_by(clips, lambda c: c.event).values():
+            clips_by_date = group_by(event_clips, lambda c: c.date)
+            dates = sorted(clips_by_date.keys())[-self.__cfg.last_event_clips_count:]
+
+            clips_to_upload = [clip
+                for date in dates
+                for clip in clips_by_date[date]
+                if clip.size >= MIN_FILE_SIZE_BYTES]
+
+            to_upload.extend(clips_to_upload)
+
+        return to_upload

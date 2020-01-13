@@ -1,16 +1,20 @@
+from teslacam.services.upload import UploadService
 from teslacam.log import log
 from teslacam import config
 from teslacam.services import upload
 from teslacam.services.filesystem import FileSystem
+from teslacam.services.notification import NotificationService
 
 def main():
     cfg = config.load_config()
+    
     fs = FileSystem(cfg)
+    notification = NotificationService(cfg)
 
-    # Start upload job
-    upload.start_job(cfg, fs)
+    upload = UploadService(cfg, fs, notification)
 
-    # Start web server
+    # Start upload service
+    upload.start()
 
     log("Started")
 
