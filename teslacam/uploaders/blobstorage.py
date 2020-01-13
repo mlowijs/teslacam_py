@@ -1,5 +1,5 @@
 from azure.storage.blob import ContainerClient
-from azure.core.exceptions import ServiceRequestError
+from azure.core.exceptions import ResourceNotFoundError, ServiceRequestError
 
 from teslacam.config import Configuration
 from teslacam.contracts import Uploader
@@ -35,7 +35,7 @@ class BlobStorageUploader(Uploader):
 
         # Really?
         try:
-            blob.delete_blob()
-        except:
+            blob.get_blob_properties()
+        except ResourceNotFoundError:
             with open(clip.path, "rb") as data:
                 blob.upload_blob(data)
