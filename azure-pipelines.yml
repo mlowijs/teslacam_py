@@ -24,7 +24,9 @@ steps:
 - task: TwineAuthenticate@1
   inputs:
     pythonUploadServiceConnection: 'PyPI production'
+  displayName: 'Authenticate to PyPI'
 
 - script: |
+    python -m pip install twine
     python -m twine upload -r pypi dist/*
   displayName: 'Upload to PyPI'
