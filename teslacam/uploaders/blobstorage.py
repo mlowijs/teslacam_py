@@ -26,16 +26,18 @@ class BlobStorageUploader(Uploader):
         except ServiceRequestError as err:
             return False
 
-    def upload(self, clip: Clip):
+    def upload(self, clip: Clip) -> bool:
         clip.date.strftime("")
         dir = f"{clip.date.year}/{clip.date.month}/{clip.date.day}" if clip.event != None else "recent"
         blob_name = f"{dir}/{clip.name}"
 
         blob = self.__container_client.get_blob_client(blob_name)
 
-        # Really?
         try:
             blob.get_blob_properties()
+            return False
         except ResourceNotFoundError:
             with open(clip.path, "rb") as data:
                 blob.upload_blob(data)
+
+            return True

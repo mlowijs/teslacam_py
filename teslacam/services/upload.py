@@ -55,8 +55,9 @@ class UploadService:
         for clip in self.__get_clips_to_upload(clips):
             if self.__uploader.can_upload():
                 log(f"Uploading clip '{clip.name}'")
-                self.__uploader.upload(clip)
-                uploaded += 1
+                
+                if self.__uploader.upload(clip):
+                    uploaded += 1
             else:
                 clips.remove(clip) # Don't delete it
 

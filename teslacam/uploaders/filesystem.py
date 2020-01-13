@@ -5,5 +5,5 @@ class FilesystemUploader(Uploader):
     def can_upload(self) -> bool:
         return True
 
-    def upload(self, clip: Clip):
-        pass
+    def upload(self, clip: Clip) -> bool:
+        return False
