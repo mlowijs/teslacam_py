@@ -16,5 +16,5 @@ class PushoverNotifier(Notifier):
         application = Application(apiToken)
         self.__user = application.get_user(userKey)
 
-    def notify(self, msg: str):
-        self.__user.send_message(msg)
+    def notify(self, message: str):
+        self.__user.send_message(message)

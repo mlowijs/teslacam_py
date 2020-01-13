@@ -15,11 +15,11 @@ CLIP_TYPE_DIR_MAPPING: Mapping[ClipType, str] = {
 }
 
 class FileSystem:
-    def __init__(self, config: Configuration):
-        self.__config = config
+    def __init__(self, cfg: Configuration):
+        self.__cfg = cfg
 
     def read_clips(self, type: ClipType) -> List[Clip]:
-        clips_dir = path.join(self.__config.tesla_cam_directory,
+        clips_dir = path.join(self.__cfg.tesla_cam_directory,
             TESLACAM_DIR, CLIP_TYPE_DIR_MAPPING[type])
 
         clips_path = Path(clips_dir)
@@ -32,10 +32,10 @@ class FileSystem:
         return clips
 
     def mount_directory(self):
-        mount(self.__config.tesla_cam_directory)
+        mount(self.__cfg.tesla_cam_directory)
 
     def unmount_directory(self):
-        umount(self.__config.tesla_cam_directory)
+        umount(self.__cfg.tesla_cam_directory)
 
     @staticmethod
     def __get_items(clips_path: Path, type: ClipType, items: List[Clip]=None, event: str=None) -> List[Clip]:

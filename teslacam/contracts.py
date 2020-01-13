@@ -4,24 +4,24 @@ from teslacam.config import Configuration
 from teslacam.models import Clip
 
 class Notifier(ABC):
-    def __init__(self, config: Configuration):
-        self.__config = config
+    def __init__(self, cfg: Configuration):
+        self.__cfg = cfg
 
     @property
     def config(self) -> Configuration:
-        return self.__config
+        return self.__cfg
 
     @abstractmethod
-    def notify(self, msg: str):
+    def notify(self, message: str):
         pass
 
 class Uploader(ABC):
-    def __init__(self, config: Configuration):
-        self.__config = config
+    def __init__(self, cfg: Configuration):
+        self.__cfg = cfg
 
     @property
     def config(self) -> Configuration:
-        return self.__config
+        return self.__cfg
 
     @abstractmethod
     def can_upload(self) -> bool:
