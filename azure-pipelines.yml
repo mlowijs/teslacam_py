@@ -1,4 +1,4 @@
-name: $(Date:yyyy.MM)$(Rev:.r)
+name: $(Date:yy.M)$(Rev:.r)
 
 trigger:
 - master
@@ -13,13 +13,10 @@ steps:
   displayName: 'Use Python 3.8'
 
 - script: |
-    python -m pip install wheel
-  displayName: 'Install wheel'
-
-- script: |
-    echo '$(Build.BuildNumber)' > teslacam/Version
+    echo '$(Build.BuildNumber)' > teslacam/VERSION
   displayName: 'Write version number'
 
 - script: |
+    python -m pip install wheel
     python setup.py bdist_wheel
   displayName: 'Build wheel'
