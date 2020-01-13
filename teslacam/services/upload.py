@@ -33,18 +33,23 @@ class UploadService:
         if (self.__cfg.mount_directory):
             self.__fs.mount_directory()
 
+        total_uploaded = 0
+
         for type in self.__cfg.clip_types:
-            self.__process_of_type(type)
+            total_uploaded += self.__process_of_type(type)
 
         if (self.__cfg.mount_directory):
             self.__fs.unmount_directory()
         
         log("Processing complete")
 
+        if total_uploaded > 0:
+            self.__notification.notify(f"Uploaded {total_uploaded} new TeslaCam clips")
+
         self.__timer = None
         self.start()
 
-    def __process_of_type(self, type: ClipType):
+    def __process_of_type(self, type: ClipType) -> int:
         log(f"Processing {str(type)} clips...")
 
         clips = self.__fs.read_clips(type)
@@ -65,7 +70,7 @@ class UploadService:
             log(f"Deleting clip '{clip.name}'")
             clip.delete()
 
-        self.__notification.notify(f"Uploaded {uploaded} clips")
+        return uploaded
 
     def __get_clips_to_upload(self, clips: List[Clip]) -> List[Clip]:
         to_upload: List[Clip] = []
