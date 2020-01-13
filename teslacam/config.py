@@ -9,15 +9,21 @@ CONFIG_PATH = "/etc/teslacam.yml"
 
 class Configuration:
     def __init__(self, config: dict):
-        self.__tesla_cam_directory = config["teslaCamDirectory"]
-        self.__mount_directory = config["mountDirectory"]
-        self.__clip_types = [ClipType[type] for type in config["clipTypes"]]
-        self.__last_event_clips_count = config["lastEventClipsCount"]
-        self.__uploader = config["uploader"]
-        
-        self.__notifier = config.get("notifier")
-
         self.__dict = config
+
+        self.__set_required_config()
+        self.__set_optional_config()
+
+    def __set_required_config(self):
+        self.__tesla_cam_directory = self.__dict["teslaCamDirectory"]
+        self.__mount_directory = self.__dict["mountDirectory"]
+        self.__clip_types = [ClipType[type] for type in self.__dict["clipTypes"]]
+        self.__last_event_clips_count = self.__dict["lastEventClipsCount"]
+        self.__uploader = self.__dict["uploader"]
+
+    def __set_optional_config(self):
+        self.__notifier = self.__dict.get("notifier")
+        self.__upload_interval = self.__dict.get("uploadInterval") or 30
 
     def __getitem__(self, key: str) -> Any:
         return self.__dict[key]
@@ -63,6 +69,13 @@ class Configuration:
         The notifier to use.
         """
         return self.__notifier
+
+    @property
+    def upload_interval(self) -> int:
+        """
+        The delay between upload job starts.
+        """
+        return self.__upload_interval
 
 def load_config() -> Configuration:
     """

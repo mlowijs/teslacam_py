@@ -10,8 +10,6 @@ from teslacam.log import log
 from teslacam.models import Clip
 from teslacam.services.filesystem import FileSystem
 
-UPLOAD_INTERVAL = 30
-
 class UploadService:
     def __init__(self, cfg: Configuration, fs: FileSystem, notification: NotificationService):
         self.__cfg = cfg
@@ -28,7 +26,7 @@ class UploadService:
         if self.__timer is not None:
             return
 
-        self.__timer = Timer(UPLOAD_INTERVAL, self.__process_clips)
+        self.__timer = Timer(self.__cfg.upload_interval, self.__process_clips)
         self.__timer.start()
 
     def __process_clips(self):
