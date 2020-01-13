@@ -1,8 +1,14 @@
+from os import path
 from setuptools import setup, find_packages
+
+here = path.dirname(__file__)
+
+with open(path.join(here, "teslacam/VERSION"), encoding="utf-8") as file:
+    version = file.read()
 
 setup(
     name="teslacam_py",
-    version="0.1.3",
+    version=version,
     description="TeslaCam uploader",
     packages=find_packages(),
     python_requires=">=3.8",
