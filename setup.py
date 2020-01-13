@@ -12,6 +12,7 @@ setup(
     description="TeslaCam uploader",
     packages=find_packages(),
     python_requires=">=3.8",
+    include_package_data=True,
     install_requires=[
         "pyyaml>=5.3",
         "azure-storage-blob>=12.1.0",
