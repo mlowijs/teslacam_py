@@ -11,5 +11,9 @@ steps:
   displayName: 'Use Python 3.8'
 
 - script: |
+    python -m pip install wheel
+  displayName: 'Install wheel'
+
+- script: |
     python setup.py bdist_wheel
   displayName: 'Build wheel'
