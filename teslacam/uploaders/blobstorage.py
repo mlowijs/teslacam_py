@@ -31,7 +31,11 @@ class BlobStorageUploader(Uploader):
         dir = f"{clip.date.year}/{clip.date.month}/{clip.date.day}" if clip.event != None else "recent"
         blob_name = f"{dir}/{clip.name}"
 
-        blob_client = self.__container_client.get_blob_client(blob_name)
+        blob = self.__container_client.get_blob_client(blob_name)
 
-        with open(clip.path, "rb") as data:
-            blob_client.upload_blob(data)
+        # Really?
+        try:
+            blob.delete_blob()
+        except:
+            with open(clip.path, "rb") as data:
+                blob.upload_blob(data)
