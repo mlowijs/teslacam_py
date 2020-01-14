@@ -60,9 +60,9 @@ class UploadService:
 
         (to_upload, to_delete) = self.__get_clips_to_upload(clips)
 
-        for clip in to_upload:
+        for i, clip in enumerate(to_upload, start=1):
             if self.__uploader.can_upload():
-                log(f"Uploading clip '{clip.name}'")
+                log(f"Uploading clip '{clip.name}' ({i}/{len(to_upload)})")
                 
                 self.__uploader.upload(clip)
                 clip.delete()
@@ -83,11 +83,11 @@ class UploadService:
         to_skip: List[Clip] = []
 
         for event, event_clips in group_by(clips, lambda c: c.event).items():
-            # Events less than 10 minutes ago will be skipped over for now
+            # Events less than 3 minutes ago will be skipped over for now
             if event is not None:
                 diff = (datetime.today() - event).total_seconds() / 60
 
-                if diff < 10.0:
+                if diff < 3.0:
                     to_skip.extend(event_clips)
                     break
 
@@ -105,5 +105,7 @@ class UploadService:
             for clip in clips
             if clip not in to_upload
             and clip not in to_skip]
+
+        log(f"Will upload {len(to_upload)}, skip {len(to_skip)} and delete {len(to_delete)}")
 
         return (to_upload, to_delete)
