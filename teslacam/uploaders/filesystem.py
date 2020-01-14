@@ -3,7 +3,7 @@ from teslacam.contracts import Uploader
 
 class FilesystemUploader(Uploader):
     def can_upload(self) -> bool:
-        return True
-
-    def upload(self, clip: Clip) -> bool:
         return False
+
+    def upload(self, clip: Clip):
+        pass

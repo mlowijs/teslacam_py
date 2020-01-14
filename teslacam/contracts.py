@@ -28,8 +28,8 @@ class Uploader(ABC):
         pass
 
     @abstractmethod
-    def upload(self, clip: Clip) -> bool:
+    def upload(self, clip: Clip):
         """
-        Uploads the clip. Returns whether the clip was uploaded.
+        Uploads the clip.
         """
         pass

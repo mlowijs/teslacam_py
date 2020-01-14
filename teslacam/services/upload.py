@@ -1,6 +1,6 @@
-from teslacam.services.notification import NotificationService
+from datetime import datetime
 from threading import Timer
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from teslacam.config import Configuration
 from teslacam.consts import MIN_FILE_SIZE_BYTES, UPLOADERS
@@ -9,6 +9,7 @@ from teslacam.funcs import group_by
 from teslacam.log import log
 from teslacam.models import Clip
 from teslacam.services.filesystem import FileSystem
+from teslacam.services.notification import NotificationService
 
 class UploadService:
     def __init__(self, cfg: Configuration, fs: FileSystem, notification: NotificationService):
@@ -57,25 +58,39 @@ class UploadService:
 
         uploaded = 0
 
-        for clip in self.__get_clips_to_upload(clips):
+        (to_upload, to_delete) = self.__get_clips_to_upload(clips)
+
+        for clip in to_upload:
             if self.__uploader.can_upload():
                 log(f"Uploading clip '{clip.name}'")
                 
-                if self.__uploader.upload(clip):
-                    uploaded += 1
-            else:
-                clips.remove(clip) # Don't delete it
+                self.__uploader.upload(clip)
+                clip.delete()
+                
+                uploaded += 1
 
-        for clip in clips:
+        for clip in to_delete:
             log(f"Deleting clip '{clip.name}'")
             clip.delete()
 
         return uploaded
 
-    def __get_clips_to_upload(self, clips: List[Clip]) -> List[Clip]:
+    def __get_clips_to_upload(self, clips: List[Clip]) -> Tuple[List[Clip], List[Clip]]:
+        """
+        Gets a tuple with the clips to upload and the clips to delete.
+        """
         to_upload: List[Clip] = []
+        to_skip: List[Clip] = []
 
-        for event_clips in group_by(clips, lambda c: c.event).values():
+        for event, event_clips in group_by(clips, lambda c: c.event).items():
+            # Events less than 10 minutes ago will be skipped over for now
+            if event is not None:
+                diff = (datetime.today() - event).total_seconds() / 60
+
+                if diff < 10.0:
+                    to_skip.extend(event_clips)
+                    break
+
             clips_by_date = group_by(event_clips, lambda c: c.date)
             dates = sorted(clips_by_date.keys())[-self.__cfg.last_event_clips_count:]
 
@@ -86,4 +101,9 @@ class UploadService:
 
             to_upload.extend(clips_to_upload)
 
-        return to_upload
+        to_delete = [clip
+            for clip in clips
+            if clip not in to_upload
+            and clip not in to_skip]
+
+        return (to_upload, to_delete)

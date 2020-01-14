@@ -8,6 +8,8 @@ from teslacam.enums import ClipType, Camera
 DATE_REGEX = re.compile(r"^(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})-")
 CAMERA_REGEX = re.compile(r"-(\w+)\.mp4")
 
+DATE_FORMAT = r"%Y-%m-%d_%H-%M-%S"
+
 CAMERA_DICT = {
     "front": Camera.FRONT,
     "left_repeater": Camera.LEFT_REPEATER,
@@ -22,11 +24,13 @@ class Clip:
         self.__path = str(path)
         self.__name = path.name
         self.__type = type
-        self.__event = event
         self.__size = path.stat().st_size
 
+        if event is not None:
+            self.__event = datetime.strptime(event, DATE_FORMAT)
+
         date = DATE_REGEX.findall(self.name)[0]
-        self.__date = datetime.strptime(date, r"%Y-%m-%d_%H-%M-%S")
+        self.__date = datetime.strptime(date, DATE_FORMAT)
 
         camera = CAMERA_REGEX.findall(self.name)[0]
         self.__camera = CAMERA_DICT[camera]
@@ -67,7 +71,7 @@ class Clip:
         return self.__camera
 
     @property
-    def event(self) -> Optional[str]:
+    def event(self) -> Optional[datetime]:
         """
         Event (save/sentry) this clip is a part of.
         """
