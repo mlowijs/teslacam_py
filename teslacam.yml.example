@@ -1,0 +1,19 @@
+teslaCamDirectory: /mnt/usbfs
+mountDirectory: true
+lastEventClipsCount: 3
+clipTypes:
+  - SAVED
+  - SENTRY
+
+uploader: blobStorage
+
+blobStorageUploader:
+  accountName: ""
+  accountKey: ""
+  containerName: ""
+
+notifier: pushover
+
+pushoverNotifier:
+  apiToken: ""
+  userKey: ""
