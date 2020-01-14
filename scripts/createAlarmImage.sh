@@ -54,7 +54,7 @@ sync
 mv root/boot/* boot
 
 # Download setup script
-curl -o root/root/setup.sh https://raw.githubusercontent.com/mlowijs/teslacam_web/master/scripts/setupSystem.sh
+curl -o root/root/setup.sh https://raw.githubusercontent.com/mlowijs/teslacam_py/master/scripts/setup.sh
 
 rm ArchLinuxARM-rpi-latest.tar.gz
 
