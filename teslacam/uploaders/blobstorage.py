@@ -23,7 +23,7 @@ class BlobStorageUploader(Uploader):
         try:
             props = self.__container_client.get_container_properties()
             return props != None
-        except ServiceRequestError as err:
+        except ServiceRequestError:
             return False
 
     def upload(self, clip: Clip):
