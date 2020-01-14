@@ -53,9 +53,6 @@ bsdtar -xpf ArchLinuxARM-rpi-latest.tar.gz -C root
 sync
 mv root/boot/* boot
 
-# Download setup script
-curl -o root/home/alarm/setup.sh https://raw.githubusercontent.com/mlowijs/teslacam_py/master/scripts/setup.sh
-
 rm ArchLinuxARM-rpi-latest.tar.gz
 
 cat << EOF >> root/etc/systemd/network/wlan0.network
@@ -68,6 +65,9 @@ EOF
 
 wpa_passphrase $1 $2 > root/etc/wpa_supplicant/wpa_supplicant-wlan0.conf
 ln -sr root/usr/lib/systemd/system/wpa_supplicant\@.service root/etc/systemd/system/multi-user.target.wants/wpa_supplicant\@wlan0.service
+
+# Download setup script onto image
+curl -o root/home/alarm/setup.sh https://raw.githubusercontent.com/mlowijs/teslacam_py/master/scripts/setup.sh
 
 umount boot root
 rm -rf root boot
