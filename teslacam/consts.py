@@ -3,11 +3,11 @@ from typing import Mapping, Type
 from teslacam.contracts import Notifier, Uploader
 from teslacam.notifiers.pushover import PushoverNotifier
 from teslacam.uploaders.blobstorage import BlobStorageUploader
-from teslacam.uploaders.filesystem import FilesystemUploader
+from teslacam.uploaders.filesystem import FileSystemUploader
 
 UPLOADERS: Mapping[str, Type[Uploader]] = {
     "blobStorage": BlobStorageUploader,
-    "filesystem": FilesystemUploader
+    "fileSystem": FileSystemUploader
 }
 
 NOTIFIERS: Mapping[str, Type[Notifier]] = {
