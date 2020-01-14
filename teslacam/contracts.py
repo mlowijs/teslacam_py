@@ -5,7 +5,7 @@ from teslacam.models import Clip
 
 class Notifier(ABC):
     def __init__(self, cfg: Configuration):
-        self.__cfg = cfg
+        pass
 
     @abstractmethod
     def notify(self, message: str):
@@ -13,7 +13,7 @@ class Notifier(ABC):
 
 class Uploader(ABC):
     def __init__(self, cfg: Configuration):
-        self.__cfg = cfg
+        pass
 
     @abstractmethod
     def can_upload(self) -> bool:
