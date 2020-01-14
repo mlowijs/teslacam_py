@@ -98,5 +98,3 @@ EOF
 
 systemctl daemon-reload
 systemctl enable teslacam
-
-reboot
