@@ -91,6 +91,7 @@ After=network-online.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/teslacam
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
