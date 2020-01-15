@@ -2,8 +2,8 @@ teslaCamDirectory: /mnt/usbfs
 mountDirectory: true
 lastEventClipsCount: 3
 clipTypes:
-  - SAVED
-  - SENTRY
+- SAVED
+- SENTRY
 
 uploader: blobStorage
 
