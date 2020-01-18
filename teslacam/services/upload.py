@@ -17,7 +17,9 @@ class UploadService:
         self.__fs = fs
         self.__notification = notification
 
-        self.__uploader = UPLOADERS[cfg.uploader](cfg)
+        if cfg.uploader:
+            self.__uploader = UPLOADERS[cfg.uploader](cfg)
+
         self.__timer: Optional[Timer] = None
 
     def start(self):
@@ -63,7 +65,7 @@ class UploadService:
         for i, clip in enumerate(to_upload, start=1):
             log(f"Uploading clip '{clip.name}' ({i}/{len(to_upload)})")
                 
-            if self.__uploader.upload(clip):
+            if self.__uploader is not None and self.__uploader.upload(clip):
                 clip.delete()
                 uploaded += 1
 
