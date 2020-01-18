@@ -61,12 +61,10 @@ class UploadService:
         (to_upload, to_delete) = self.__get_clips_to_upload(clips)
 
         for i, clip in enumerate(to_upload, start=1):
-            if self.__uploader.can_upload():
-                log(f"Uploading clip '{clip.name}' ({i}/{len(to_upload)})")
+            log(f"Uploading clip '{clip.name}' ({i}/{len(to_upload)})")
                 
-                self.__uploader.upload(clip)
+            if self.__uploader.upload(clip):
                 clip.delete()
-                
                 uploaded += 1
 
         for clip in to_delete:

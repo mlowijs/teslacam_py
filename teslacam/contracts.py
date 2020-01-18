@@ -16,11 +16,7 @@ class Uploader(ABC):
         pass
 
     @abstractmethod
-    def can_upload(self) -> bool:
-        pass
-
-    @abstractmethod
-    def upload(self, clip: Clip):
+    def upload(self, clip: Clip) -> bool:
         """
         Uploads the clip.
         """

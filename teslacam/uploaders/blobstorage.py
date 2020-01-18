@@ -19,14 +19,7 @@ class BlobStorageUploader(Uploader):
         self.__container_client = ContainerClient(f"https://{account_name}.blob.core.windows.net/",
             container_name, account_key, retry_total=1, connection_timeout=5)
 
-    def can_upload(self) -> bool:
-        try:
-            props = self.__container_client.get_container_properties()
-            return props != None
-        except ServiceRequestError:
-            return False
-
-    def upload(self, clip: Clip):
+    def upload(self, clip: Clip) -> bool:
         dir = f"{clip.date.year}/{clip.date.month}/{clip.date.day}" if clip.event != None else "recent"
         blob_name = f"{dir}/{clip.name}"
 
@@ -34,12 +27,14 @@ class BlobStorageUploader(Uploader):
 
         try:
             blob.get_blob_properties()
+            return False
         except ResourceNotFoundError:
-            self.__perform_upload(clip, blob)
+            return self.__perform_upload(clip, blob)
 
-    def __perform_upload(self, clip: Clip, blob: BlobClient):
+    def __perform_upload(self, clip: Clip, blob: BlobClient) -> bool:
         try:
             with open(clip.path, "rb") as data:
                 blob.upload_blob(data)
+            return True
         except:
-            return
+            return False
