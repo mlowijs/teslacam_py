@@ -70,7 +70,7 @@ class UploadService:
                 uploaded += 1
 
         for clip in to_delete:
-            log(f"Deleting clip '{clip.name}'")
+            log(f"Deleting clip '{clip.name}' ({round(clip.size / 1048576, 2)} MB)")
             clip.delete()
 
         return uploaded
