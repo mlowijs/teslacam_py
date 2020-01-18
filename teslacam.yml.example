@@ -5,15 +5,15 @@ clipTypes:
 - SAVED
 - SENTRY
 
-uploader: blobStorage
+#uploader: blobStorage
 
-blobStorageUploader:
-  accountName: ""
-  accountKey: ""
-  containerName: ""
+#blobStorageUploader:
+#  accountName: ""
+#  accountKey: ""
+#  containerName: ""
 
-notifier: pushover
+#notifier: pushover
 
-pushoverNotifier:
-  apiToken: ""
-  userKey: ""
+#pushoverNotifier:
+#  apiToken: ""
+#  userKey: ""
