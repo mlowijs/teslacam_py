@@ -3,7 +3,7 @@ from threading import Timer
 from typing import List, Optional, Tuple
 
 from teslacam.config import Configuration
-from teslacam.consts import MIN_FILE_SIZE_BYTES, UPLOADERS
+from teslacam.consts import MIN_FILE_SIZE_BYTES, ONE_MEGABYTE, UPLOADERS
 from teslacam.enums import ClipType
 from teslacam.funcs import group_by
 from teslacam.log import log
@@ -63,14 +63,14 @@ class UploadService:
         (to_upload, to_delete) = self.__get_clips_to_upload(clips)
 
         for i, clip in enumerate(to_upload, start=1):
-            log(f"Uploading clip '{clip.name}' ({i}/{len(to_upload)})")
+            log(f"Uploading clip '{clip.name}' ({format_size(clip)}) ({i}/{len(to_upload)})")
                 
             if self.__uploader is not None and self.__uploader.upload(clip):
                 clip.delete()
                 uploaded += 1
 
         for clip in to_delete:
-            log(f"Deleting clip '{clip.name}' ({round(clip.size / 1048576, 2)} MB)")
+            log(f"Deleting clip '{clip.name}' ({format_size(clip)})")
             clip.delete()
 
         return uploaded
@@ -109,3 +109,6 @@ class UploadService:
         log(f"Will upload {len(to_upload)}, skip {len(to_skip)} and delete {len(to_delete)}")
 
         return (to_upload, to_delete)
+
+def format_size(clip: Clip) -> str:
+    return f"{round(clip.size / ONE_MEGABYTE, 2)} MB"
