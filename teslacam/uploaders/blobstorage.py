@@ -30,6 +30,8 @@ class BlobStorageUploader(Uploader):
             return False
         except ResourceNotFoundError:
             return self.__perform_upload(clip, blob)
+        except ServiceRequestError:
+            return False
 
     def __perform_upload(self, clip: Clip, blob: BlobClient) -> bool:
         try:
