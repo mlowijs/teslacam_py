@@ -18,12 +18,12 @@ class Configuration:
         self.__tesla_cam_directory = self.__cfg["teslaCamDirectory"]
         self.__mount_directory = self.__cfg["mountDirectory"]
         self.__clip_types = [ClipType[type] for type in self.__cfg["clipTypes"]]
-        self.__last_event_clips_count = self.__cfg["lastEventClipsCount"]
 
     def __set_optional_config(self):
         self.__uploader = self.__cfg.get("uploader")
         self.__notifier = self.__cfg.get("notifier")
         self.__upload_interval = self.__cfg.get("uploadInterval") or 30
+        self.__last_event_clips_count = self.__cfg["lastEventClipsCount"] or 10
 
     def __getitem__(self, key: str) -> Any:
         return self.__cfg[key]
