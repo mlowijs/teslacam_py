@@ -40,10 +40,16 @@ class FileSystem:
         return clips
 
     def mount_directory(self):
+        try:
             mount(self.__cfg.tesla_cam_directory)
+        except:
+            return
 
     def unmount_directory(self):
+        try:
             umount(self.__cfg.tesla_cam_directory)
+        except:
+            return
 
     @staticmethod
     def __get_items(clips_path: Path, type: ClipType, items: List[Clip]=None, event: str=None) -> List[Clip]:
