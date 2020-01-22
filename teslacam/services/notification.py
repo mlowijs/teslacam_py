@@ -10,4 +10,7 @@ class NotificationService:
         if not self.__notifier:
             return
 
-        self.__notifier.notify(msg)
+        try:
+            self.__notifier.notify(msg)
+        except:
+            return

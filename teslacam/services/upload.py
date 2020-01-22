@@ -33,21 +33,24 @@ class UploadService:
         self.__timer.start()
 
     def __process_clips(self):
-        if (self.__cfg.mount_directory):
-            self.__fs.mount_directory()
+        try:
+            if (self.__cfg.mount_directory):
+                self.__fs.mount_directory()
 
-        total_uploaded = 0
+            total_uploaded = 0
 
-        for type in self.__cfg.clip_types:
-            total_uploaded += self.__process_of_type(type)
+            for type in self.__cfg.clip_types:
+                total_uploaded += self.__process_of_type(type)
 
-        if (self.__cfg.mount_directory):
-            self.__fs.unmount_directory()
-        
-        log("Processing complete")
+            if (self.__cfg.mount_directory):
+                self.__fs.unmount_directory()
+            
+            log("Processing complete")
 
-        if total_uploaded > 0:
-            self.__notification.notify(f"Uploaded {total_uploaded} new TeslaCam clips")
+            if total_uploaded > 0:
+                self.__notification.notify(f"Uploaded {total_uploaded} new TeslaCam clips")
+        except:
+            log("Processing failed, retrying later")
 
         self.__timer = None
         self.start()
