@@ -57,9 +57,13 @@ class FileSystem:
 
         for item in clips_path.iterdir():
             if item.is_file() and path.splitext(item.name)[1] == ".mp4":
-                items.append(Clip(item, type, event))
-            
-            if item.is_dir():
+                try:
+                    clip = Clip(item, type, event)
+                    items.append(clip)
+                except ValueError:
+                    continue
+
+            elif item.is_dir():
                 FileSystem.__get_items(item, type, items, item.name)
 
         return items
