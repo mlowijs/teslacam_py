@@ -1,5 +1,6 @@
-from os import path
+from os import path, listdir
 from pathlib import Path
+import shutil
 from typing import List, Mapping
 
 try:
@@ -38,6 +39,21 @@ class FileSystem:
         clips = FileSystem.__get_items(clips_path, type)
 
         return clips
+
+    def delete_empty_event_dirs(self, type: ClipType):
+        clips_dir = path.join(self.__cfg.tesla_cam_directory,
+            TESLACAM_DIR, CLIP_TYPE_DIR_MAPPING[type])
+
+        clips_path = Path(clips_dir)
+
+        if not clips_path.exists():
+            return
+
+        for dir in [item for item in clips_path.iterdir() if item.is_dir()]:
+            items = [item for item in listdir(dir) if not item.startswith(".")]
+            
+            if len(items) == 0:
+                shutil.rmtree(dir)
 
     def mount_directory(self):
         try:

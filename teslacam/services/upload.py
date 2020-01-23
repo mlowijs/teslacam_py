@@ -76,6 +76,8 @@ class UploadService:
             log(f"Deleting clip '{clip.name}' ({format_size(clip)})")
             clip.delete()
 
+        self.__fs.delete_empty_event_dirs(type)
+
         return uploaded
 
     def __get_clips_to_upload(self, clips: List[Clip]) -> Tuple[List[Clip], List[Clip]]:
