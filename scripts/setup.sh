@@ -65,7 +65,7 @@ losetup -d /dev/loop0
 
 # Create mountpoint and TeslaCam folder
 mkdir -p /mnt/usbfs
-echo "/usbfs /mnt/usbfs vfat loop,offset=1048576,rw,user,errors=continue 0 0" >> /etc/fstab
+echo "/usbfs /mnt/usbfs vfat loop,offset=1048576,rw,user,noauto,errors=continue 0 0" >> /etc/fstab
 
 mount /mnt/usbfs
 mkdir -p /mnt/usbfs/TeslaCam
