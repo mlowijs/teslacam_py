@@ -27,7 +27,7 @@ class BlobStorageUploader(Uploader):
 
         try:
             blob.get_blob_properties()
-            return False
+            return True
         except ResourceNotFoundError:
             return self.__perform_upload(clip, blob)
         except ServiceRequestError:
