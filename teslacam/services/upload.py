@@ -88,23 +88,32 @@ class UploadService:
         to_skip: List[Clip] = []
 
         for event, event_clips in group_by(clips, lambda c: c.event).items():
-            # Events less than 3 minutes ago will be skipped over for now
+            # Events less than 2 minutes ago will be skipped over for now
             if event is not None:
                 diff = (datetime.today() - event).total_seconds() / 60
 
-                if diff < 3.0:
+                if diff < 2.0:
                     to_skip.extend(event_clips)
                     break
 
-            clips_by_date = group_by(event_clips, lambda c: c.date)
-            dates = sorted(clips_by_date.keys())[-self.__cfg.last_event_clips_count:]
+                clips_by_date = group_by(event_clips, lambda c: c.date)
+                dates = sorted(clips_by_date.keys())[-self.__cfg.last_event_clips_count:]
 
-            clips_to_upload = [clip
-                for date in dates
-                for clip in clips_by_date[date]
-                if clip.size >= MIN_FILE_SIZE_BYTES]
+                clips_to_upload = [clip
+                    for date in dates
+                    for clip in clips_by_date[date]
+                    if clip.size >= MIN_FILE_SIZE_BYTES]            
 
-            to_upload.extend(clips_to_upload)
+                to_upload.extend(clips_to_upload)
+            else: # RECENT
+                # Clips less than 2 minutes ago will be skipped over for now
+                to_upload.extend([clip
+                    for clip in clips
+                    if (datetime.today() - clip.date).total_seconds() / 60 >= 2.0])
+
+                to_skip.extend([clip
+                    for clip in clips
+                    if clip not in to_upload])
 
         to_delete = [clip
             for clip in clips
