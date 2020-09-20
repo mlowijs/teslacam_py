@@ -26,8 +26,7 @@ class Clip:
         self.__type = type
         self.__size = path.stat().st_size
 
-        if event is not None:
-            self.__event = datetime.strptime(event, DATE_FORMAT)
+        self.__event = datetime.strptime(event, DATE_FORMAT) if event is not None else None
 
         date = DATE_REGEX.findall(self.name)[0]
         self.__date = datetime.strptime(date, DATE_FORMAT)
